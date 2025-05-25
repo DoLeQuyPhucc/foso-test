@@ -6,7 +6,7 @@ export default function Home() {
     <div className="min-h-screen bg-gray-50 flex flex-col">
       <Header />
       <main className="py-8 flex-grow">
-        <div className="mx-auto px-[15%]">
+        <div className="mx-auto px-[5%] md:px-[10%]">
           <h1 className="text-2xl font-bold text-gray-800 mb-4">
             Welcome to SUNEIL
           </h1>
