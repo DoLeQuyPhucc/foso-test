@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import Header from "@/layouts/Header";
 import Footer from "@/layouts/Footer";
-import Banner from "@/components/ui/Banner/Banner";
+import Banner from "@/components/Banner/Banner";
 import { ProductService } from "@/services/ProductService";
 import { Product } from "@/types/Product";
 
@@ -30,7 +30,11 @@ export default function Home() {
     <div className="min-h-screen bg-gray-50 flex flex-col">
       <Header />
       <main className="flex-grow py-8">
-        <Banner bannerImage="/banner.png" products={featuredProducts} loading={loading} />
+        <Banner
+          bannerImage="/banner.png"
+          products={featuredProducts}
+          loading={loading}
+        />
       </main>
       <Footer />
     </div>
