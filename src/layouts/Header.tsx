@@ -75,14 +75,6 @@ export default function Header() {
 
           {/* Right Icons */}
           <div className="flex items-center gap-2 md:gap-3 flex-shrink-0">
-            {/* Notification */}
-            <div className="relative hidden md:block">
-              <Bell className="w-5 h-5 md:w-6 md:h-6 text-gray-600" />
-              <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs rounded-full w-4 h-4 md:w-5 md:h-5 flex items-center justify-center">
-                M
-              </span>
-            </div>
-
             {/* Cart */}
             <div className="flex items-center gap-1 md:gap-2">
               <div className="relative">

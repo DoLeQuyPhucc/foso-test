@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef, useCallback } from "react";
 import { Product } from "@/types/Product";
 import { Category } from "@/types/Categories";
 import { Brand } from "@/types/Brand";
@@ -8,7 +8,7 @@ import { ProductService } from "@/services/ProductService";
 import { CategoriesService } from "@/services/CategoriesService";
 import { BrandService } from "@/services/BrandService";
 import ProductCard from "./ProductCard";
-import { ChevronDown, Filter } from "lucide-react";
+import { ChevronDown, Filter, Loader2 } from "lucide-react";
 
 interface FilterState {
   categories: number[];
@@ -21,11 +21,21 @@ interface FilterState {
 const ProductList: React.FC = () => {
   const [products, setProducts] = useState<Product[]>([]);
   const [filteredProducts, setFilteredProducts] = useState<Product[]>([]);
+  const [displayedProducts, setDisplayedProducts] = useState<Product[]>([]);
   const [categories, setCategories] = useState<Category[]>([]);
   const [brands, setBrands] = useState<Brand[]>([]);
   const [loading, setLoading] = useState(true);
+  const [loadingMore, setLoadingMore] = useState(false);
   const [sortBy, setSortBy] = useState("default");
   const [activeTab, setActiveTab] = useState("relevant");
+
+  // Lazy loading states
+  const [currentPage, setCurrentPage] = useState(1);
+  const [hasMore, setHasMore] = useState(true);
+  const ITEMS_PER_PAGE = 12; // Số sản phẩm load mỗi lần
+
+  // Ref for intersection observer
+  const loadMoreRef = useRef<HTMLDivElement>(null);
 
   const [filters, setFilters] = useState<FilterState>({
     categories: [],
@@ -82,6 +92,39 @@ const ProductList: React.FC = () => {
   useEffect(() => {
     applyFilters();
   }, [filters, products, sortBy]);
+
+  // Reset displayed products when filtered products change
+  useEffect(() => {
+    setCurrentPage(1);
+    setHasMore(true);
+    loadInitialProducts();
+  }, [filteredProducts]);
+
+  // Intersection Observer for auto-loading
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        const target = entries[0];
+        if (target.isIntersecting && hasMore && !loadingMore) {
+          loadMoreProducts();
+        }
+      },
+      {
+        threshold: 0.1,
+        rootMargin: "100px", // Load khi còn cách 100px
+      }
+    );
+
+    if (loadMoreRef.current) {
+      observer.observe(loadMoreRef.current);
+    }
+
+    return () => {
+      if (loadMoreRef.current) {
+        observer.unobserve(loadMoreRef.current);
+      }
+    };
+  }, [hasMore, loadingMore, filteredProducts]);
 
   const fetchData = async () => {
     try {
@@ -147,6 +190,37 @@ const ProductList: React.FC = () => {
 
     setFilteredProducts(filtered);
   };
+
+  const loadInitialProducts = useCallback(() => {
+    const initialProducts = filteredProducts.slice(0, ITEMS_PER_PAGE);
+    setDisplayedProducts(initialProducts);
+    setHasMore(filteredProducts.length > ITEMS_PER_PAGE);
+  }, [filteredProducts]);
+
+  const loadMoreProducts = useCallback(async () => {
+    if (loadingMore || !hasMore) return;
+
+    setLoadingMore(true);
+
+    // Simulate network delay for better UX
+    await new Promise((resolve) => setTimeout(resolve, 300));
+
+    const nextPage = currentPage + 1;
+    const startIndex = currentPage * ITEMS_PER_PAGE;
+    const endIndex = startIndex + ITEMS_PER_PAGE;
+
+    const newProducts = filteredProducts.slice(startIndex, endIndex);
+
+    if (newProducts.length > 0) {
+      setDisplayedProducts((prev) => [...prev, ...newProducts]);
+      setCurrentPage(nextPage);
+      setHasMore(endIndex < filteredProducts.length);
+    } else {
+      setHasMore(false);
+    }
+
+    setLoadingMore(false);
+  }, [currentPage, filteredProducts, loadingMore, hasMore]);
 
   const handleFilterChange = (
     filterType: keyof FilterState,
@@ -330,6 +404,9 @@ const ProductList: React.FC = () => {
               <h1 className="text-xl font-bold text-gray-900">
                 Danh sách sản phẩm
               </h1>
+              <span className="text-sm text-gray-500">
+                ({displayedProducts.length}/{filteredProducts.length} sản phẩm)
+              </span>
             </div>
 
             {/* Right side - Filter tabs */}
@@ -362,11 +439,32 @@ const ProductList: React.FC = () => {
               </p>
             </div>
           ) : (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {filteredProducts.map((product) => (
-                <ProductCard key={product.id} product={product} />
-              ))}
-            </div>
+            <>
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                {displayedProducts.map((product) => (
+                  <ProductCard key={product.id} product={product} />
+                ))}
+              </div>
+
+              {/* Loading More Indicator */}
+              {hasMore && (
+                <div
+                  ref={loadMoreRef}
+                  className="flex justify-center items-center py-8"
+                >
+                  {loadingMore ? (
+                    <div className="flex items-center gap-2 text-gray-600">
+                      <Loader2 className="w-5 h-5 animate-spin" />
+                      <span>Đang tải thêm sản phẩm...</span>
+                    </div>
+                  ) : (
+                    <div className="text-gray-400 text-sm">
+                      Cuộn xuống để xem thêm sản phẩm
+                    </div>
+                  )}
+                </div>
+              )}
+            </>
           )}
         </div>
       </div>
