@@ -1,14 +1,19 @@
 import React from "react";
 import Image from "next/image";
 import { Product } from "@/types/Product";
-import { Star } from "lucide-react";
+import { Star, ShoppingCart } from "lucide-react";
 
 interface ProductCardProps {
   product: Product;
   className?: string;
+  onBuyNow?: (product: Product) => void;
 }
 
-const ProductCard: React.FC<ProductCardProps> = ({ product, className = "" }) => {
+const ProductCard: React.FC<ProductCardProps> = ({
+  product,
+  className = "",
+  onBuyNow,
+}) => {
   const formatPrice = (price: number) => {
     return new Intl.NumberFormat("vi-VN", {
       style: "currency",
@@ -16,15 +21,26 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, className = "" }) =>
     }).format(price);
   };
 
+  const handleBuyNow = () => {
+    if (onBuyNow) {
+      onBuyNow(product);
+    } else {
+      // Default behavior - có thể redirect đến trang chi tiết sản phẩm
+      console.log("Mua ngay sản phẩm:", product.name);
+    }
+  };
+
   return (
-    <div className={`bg-white rounded-lg shadow-lg p-4 ${className}`}>
+    <div
+      className={`bg-white rounded-lg shadow-lg p-4 hover:shadow-xl transition-shadow duration-300 ${className}`}
+    >
       {/* Product Image */}
-      <div className="relative mb-3 h-[180px] rounded-lg overflow-hidden">
+      <div className="relative mb-3 h-[180px] rounded-lg overflow-hidden group">
         <Image
           src={product.thumbnail}
           alt={product.name}
           fill
-          className="object-cover"
+          className="object-cover group-hover:scale-105 transition-transform duration-300"
           sizes="(max-width: 768px) 100vw, (max-width: 1024px) 33vw, 20vw"
           quality={85}
         />
@@ -37,7 +53,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, className = "" }) =>
       </div>
 
       {/* Product Info */}
-      <div className="space-y-2">
+      <div className="space-y-3">
         {/* Product Name */}
         <h3 className="font-semibold text-gray-800 text-sm line-clamp-2 leading-tight">
           {product.name}
@@ -62,9 +78,18 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, className = "" }) =>
             </div>
           )}
         </div>
+
+        {/* Buy Now Button */}
+        <button
+          onClick={handleBuyNow}
+          className="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2.5 px-4 rounded-lg flex items-center justify-center gap-2 transition-colors duration-200 active:scale-95 transform"
+        >
+          <ShoppingCart className="w-4 h-4" />
+          Mua ngay
+        </button>
       </div>
     </div>
   );
 };
 
-export default ProductCard; 
+export default ProductCard;
