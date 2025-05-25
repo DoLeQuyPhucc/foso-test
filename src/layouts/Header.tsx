@@ -15,11 +15,34 @@ import { Input } from "@/components/ui/input";
 import Image from "next/image";
 import { useCart } from "@/contexts/CartContext";
 import CartDropdown from "@/components/Cart/CartDropdown";
-import { useState } from "react";
+import React, { useState, useEffect } from "react";
 
 export default function Header() {
   const { getTotalItems } = useCart();
-  const [isCartHovered, setIsCartHovered] = useState(false);
+  const [isCartOpen, setIsCartOpen] = useState(false);
+
+  // Close cart when clicking outside
+  const handleClickOutside = (event: MouseEvent) => {
+    const target = event.target as HTMLElement;
+    if (!target.closest("[data-cart-container]")) {
+      setIsCartOpen(false);
+    }
+  };
+
+  // Add event listener for clicking outside
+  useEffect(() => {
+    if (isCartOpen) {
+      document.addEventListener("mousedown", handleClickOutside);
+      return () => {
+        document.removeEventListener("mousedown", handleClickOutside);
+      };
+    }
+  }, [isCartOpen]);
+
+  // Handle hover to open cart
+  const handleCartHover = () => {
+    setIsCartOpen(true);
+  };
 
   return (
     <header className="w-full">
@@ -84,25 +107,26 @@ export default function Header() {
           {/* Right Icons */}
           <div className="flex items-center gap-2 md:gap-3 flex-shrink-0">
             {/* Cart */}
-            <div 
-              className="flex items-center gap-1 md:gap-2 relative cursor-pointer"
-              onMouseEnter={() => setIsCartHovered(true)}
-              onMouseLeave={() => setIsCartHovered(false)}
-            >
-              <div className="relative">
-                <ShoppingCart className="w-5 h-5 md:w-6 md:h-6 text-gray-600" />
-                {getTotalItems() > 0 && (
-                  <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs rounded-full w-4 h-4 md:w-5 md:h-5 flex items-center justify-center">
-                    {getTotalItems()}
-                  </span>
-                )}
+            <div className="relative" data-cart-container>
+              <div
+                className="flex items-center gap-1 md:gap-2 cursor-pointer"
+                onMouseEnter={handleCartHover}
+              >
+                <div className="relative">
+                  <ShoppingCart className="w-5 h-5 md:w-6 md:h-6 text-gray-600" />
+                  {getTotalItems() > 0 && (
+                    <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs rounded-full w-4 h-4 md:w-5 md:h-5 flex items-center justify-center">
+                      {getTotalItems()}
+                    </span>
+                  )}
+                </div>
+                <span className="text-xs md:text-sm text-gray-600 hidden sm:inline">
+                  Giỏ hàng
+                </span>
               </div>
-              <span className="text-xs md:text-sm text-gray-600 hidden sm:inline">
-                Giỏ hàng
-              </span>
-              
+
               {/* Cart Dropdown */}
-              {isCartHovered && <CartDropdown />}
+              {isCartOpen && <CartDropdown />}
             </div>
 
             {/* User Account */}

@@ -3,6 +3,7 @@ import Image from "next/image";
 import { Product } from "@/types/Product";
 import { Star, ShoppingCart } from "lucide-react";
 import { useCart } from "@/contexts/CartContext";
+import { toast } from 'react-toastify';
 
 interface ProductCardProps {
   product: Product;
@@ -24,16 +25,23 @@ const ProductCard: React.FC<ProductCardProps> = ({
     }).format(price);
   };
 
-  const handleBuyNow = () => {
+    const handleBuyNow = () => {
     // Add to cart first
     addToCart(product, 1);
-
+    
+    // Show success toast
+    toast.success(`Đã thêm "${product.name}" vào giỏ hàng!`, {
+      position: "top-right",
+      autoClose: 2000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+    });
+    
     // Then call custom handler if provided
     if (onBuyNow) {
       onBuyNow(product);
-    } else {
-      // Default behavior - show success message or redirect
-      console.log("Đã thêm vào giỏ hàng:", product.name);
     }
   };
 

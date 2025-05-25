@@ -4,6 +4,7 @@ import React from "react";
 import Image from "next/image";
 import { useCart } from "@/contexts/CartContext";
 import { Minus, Plus, Trash2, ShoppingBag } from "lucide-react";
+import { toast } from 'react-toastify';
 
 const CartDropdown: React.FC = () => {
   const { cartItems, updateQuantity, removeFromCart, getTotalPrice } = useCart();
@@ -13,6 +14,22 @@ const CartDropdown: React.FC = () => {
       style: "currency",
       currency: "VND",
     }).format(price);
+  };
+
+  const handleUpdateQuantity = (productId: number, newQuantity: number, productName: string) => {
+    const oldQuantity = cartItems.find(item => item.product.id === productId)?.quantity || 0;
+    updateQuantity(productId, newQuantity);
+    
+    if (newQuantity > oldQuantity) {
+      toast.info(`Đã tăng số lượng "${productName}"`, { autoClose: 1500 });
+    } else if (newQuantity < oldQuantity && newQuantity > 0) {
+      toast.info(`Đã giảm số lượng "${productName}"`, { autoClose: 1500 });
+    }
+  };
+
+  const handleRemoveFromCart = (productId: number, productName: string) => {
+    removeFromCart(productId);
+    toast.error(`Đã xóa "${productName}" khỏi giỏ hàng`, { autoClose: 2000 });
   };
 
   if (cartItems.length === 0) {
@@ -69,7 +86,7 @@ const CartDropdown: React.FC = () => {
                   {/* Quantity Controls */}
                   <div className="flex items-center gap-2">
                     <button
-                      onClick={() => updateQuantity(item.product.id, item.quantity - 1)}
+                      onClick={() => handleUpdateQuantity(item.product.id, item.quantity - 1, item.product.name)}
                       className="w-6 h-6 rounded-full border border-gray-300 flex items-center justify-center hover:bg-gray-100 transition-colors"
                     >
                       <Minus className="w-3 h-3" />
@@ -80,14 +97,14 @@ const CartDropdown: React.FC = () => {
                     </span>
                     
                     <button
-                      onClick={() => updateQuantity(item.product.id, item.quantity + 1)}
+                      onClick={() => handleUpdateQuantity(item.product.id, item.quantity + 1, item.product.name)}
                       className="w-6 h-6 rounded-full border border-gray-300 flex items-center justify-center hover:bg-gray-100 transition-colors"
                     >
                       <Plus className="w-3 h-3" />
                     </button>
                     
                     <button
-                      onClick={() => removeFromCart(item.product.id)}
+                      onClick={() => handleRemoveFromCart(item.product.id, item.product.name)}
                       className="w-6 h-6 rounded-full text-red-500 hover:bg-red-50 flex items-center justify-center transition-colors ml-1"
                     >
                       <Trash2 className="w-3 h-3" />
