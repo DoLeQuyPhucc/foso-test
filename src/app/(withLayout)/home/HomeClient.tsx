@@ -6,6 +6,7 @@ import Footer from "@/layouts/Footer";
 import Banner from "@/components/Banner/Banner";
 import { ProductService } from "@/services/ProductService";
 import { Product } from "@/types/Product";
+import ProductList from "@/components/Product/ProductList";
 
 export default function Home() {
   const [featuredProducts, setFeaturedProducts] = useState<Product[]>([]);
@@ -35,6 +36,7 @@ export default function Home() {
           products={featuredProducts}
           loading={loading}
         />
+        <ProductList />
       </main>
       <Footer />
     </div>
