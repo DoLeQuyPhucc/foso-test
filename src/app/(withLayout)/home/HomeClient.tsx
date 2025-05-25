@@ -1,21 +1,36 @@
+"use client";
+
+import { useEffect, useState } from "react";
 import Header from "@/layouts/Header";
 import Footer from "@/layouts/Footer";
+import Banner from "@/components/ui/Banner/Banner";
+import { ProductService } from "@/services/ProductService";
+import { Product } from "@/types/Product";
 
 export default function Home() {
+  const [featuredProducts, setFeaturedProducts] = useState<Product[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchFeaturedProducts = async () => {
+      try {
+        const products = await ProductService.getFeaturedProducts();
+        setFeaturedProducts(products);
+      } catch (error) {
+        console.error("Error fetching featured products:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchFeaturedProducts();
+  }, []);
+
   return (
     <div className="min-h-screen bg-gray-50 flex flex-col">
       <Header />
-      <main className="py-8 flex-grow">
-        <div className="mx-auto px-[5%] md:px-[10%]">
-          <h1 className="text-2xl font-bold text-gray-800 mb-4">
-            Welcome to SUNEIL
-          </h1>
-          <p className="text-gray-600">
-            This is the main content area. The header component has been
-            implemented above with the exact design and colors from your
-            reference image.
-          </p>
-        </div>
+      <main className="flex-grow py-8">
+        <Banner bannerImage="/banner.png" products={featuredProducts} loading={loading} />
       </main>
       <Footer />
     </div>

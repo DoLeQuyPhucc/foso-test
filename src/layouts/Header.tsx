@@ -15,7 +15,7 @@ export default function Header() {
   return (
     <header className="w-full">
       {/* Top Blue Banner */}
-      <div className="bg-[#0066CC] text-white text-sm py-2 hidden md:block">
+      <div className="bg-gradient-to-r from-[#0066CC] via-[#4da6ff] to-[#0066CC] text-white text-sm py-2 hidden md:block">
         <div className="mx-auto flex justify-between items-center px-[10%]">
           <div className="flex items-center gap-4">
             <span className="flex items-center gap-1">
@@ -105,13 +105,13 @@ export default function Header() {
       </div>
 
       {/* Navigation Bar */}
-      <div className="bg-[#0066CC] text-white py-3">
+      <div className="bg-white border-b border-gray-200 py-3">
         <div className="mx-auto flex items-center justify-between px-[5%] md:px-[10%]">
           <div className="flex items-center gap-3 md:gap-6">
             {/* Menu Button */}
             <Button
               variant="secondary"
-              className="bg-[#004499] hover:bg-[#003366] text-white flex items-center gap-1 md:gap-2 flex-shrink-0 text-xs md:text-sm px-2 md:px-4"
+              className="bg-[#0066CC] hover:bg-[#004499] text-white flex items-center gap-1 md:gap-2 flex-shrink-0 text-xs md:text-sm px-2 md:px-4"
             >
               <Menu className="w-3 h-3 md:w-4 md:h-4" />
               <span className="hidden sm:inline">Danh Mục Sản Phẩm</span>
@@ -122,25 +122,25 @@ export default function Header() {
             <nav className="flex items-center gap-2 md:gap-4">
               <a
                 href="#"
-                className="hover:text-blue-200 transition-colors whitespace-nowrap text-xs md:text-sm"
+                className="hover:text-blue-600 transition-colors whitespace-nowrap text-xs md:text-sm text-gray-800"
               >
                 Về Chúng Tôi
               </a>
               <a
                 href="#"
-                className="hover:text-blue-200 transition-colors whitespace-nowrap text-xs md:text-sm hidden sm:block"
+                className="hover:text-blue-600 transition-colors whitespace-nowrap text-xs md:text-sm text-gray-800 hidden sm:block"
               >
                 Bài Viết
               </a>
               <a
                 href="#"
-                className="hover:text-blue-200 transition-colors whitespace-nowrap text-xs md:text-sm hidden md:block"
+                className="hover:text-blue-600 transition-colors whitespace-nowrap text-xs md:text-sm text-gray-800 hidden md:block"
               >
-                Catalogue
+                Catalog
               </a>
               <a
                 href="#"
-                className="hover:text-blue-200 transition-colors whitespace-nowrap text-xs md:text-sm"
+                className="hover:text-blue-600 transition-colors whitespace-nowrap text-xs md:text-sm text-gray-800"
               >
                 Liên Hệ
               </a>
@@ -150,31 +150,39 @@ export default function Header() {
           {/* Right Side Services */}
           <div className="flex items-center gap-2 md:gap-4 text-xs md:text-sm flex-shrink-0">
             <div className="flex items-center gap-1 hidden lg:flex">
-              <div className="w-4 h-4 md:w-5 md:h-5 bg-white rounded-full flex items-center justify-center">
-                <Phone className="w-2 h-2 md:w-3 md:h-3 text-[#0066CC]" />
+              <div className="w-4 h-4 md:w-5 md:h-5 bg-[#0066CC] rounded-full flex items-center justify-center">
+                <Phone className="w-2 h-2 md:w-3 md:h-3 text-white" />
               </div>
-              <span className="whitespace-nowrap">Hỗ trợ 24/7</span>
+              <span className="whitespace-nowrap text-gray-800">
+                Hỗ trợ 24/7
+              </span>
             </div>
 
             <div className="flex items-center gap-1 hidden xl:flex">
-              <div className="w-4 h-4 md:w-5 md:h-5 bg-white rounded-full flex items-center justify-center">
-                <ShoppingCart className="w-2 h-2 md:w-3 md:h-3 text-[#0066CC]" />
+              <div className="w-4 h-4 md:w-5 md:h-5 bg-[#0066CC] rounded-full flex items-center justify-center">
+                <ShoppingCart className="w-2 h-2 md:w-3 md:h-3 text-white" />
               </div>
-              <span className="whitespace-nowrap">Miễn Phí Vận Chuyển</span>
+              <span className="whitespace-nowrap text-gray-800">
+                Miễn Phí Vận Chuyển
+              </span>
             </div>
 
             <div className="flex items-center gap-1 hidden lg:flex">
-              <div className="w-4 h-4 md:w-5 md:h-5 bg-white rounded-full flex items-center justify-center">
-                <Bell className="w-2 h-2 md:w-3 md:h-3 text-[#0066CC]" />
+              <div className="w-4 h-4 md:w-5 md:h-5 bg-[#0066CC] rounded-full flex items-center justify-center">
+                <Bell className="w-2 h-2 md:w-3 md:h-3 text-white" />
               </div>
-              <span className="whitespace-nowrap">Giao Hàng Nhanh 2h</span>
+              <span className="whitespace-nowrap text-gray-800">
+                Giao Hàng Nhanh 2h
+              </span>
             </div>
 
             <div className="flex items-center gap-1 hidden xl:flex">
-              <div className="w-4 h-4 md:w-5 md:h-5 bg-white rounded-full flex items-center justify-center">
-                <MapPin className="w-2 h-2 md:w-3 md:h-3 text-[#0066CC]" />
+              <div className="w-4 h-4 md:w-5 md:h-5 bg-[#0066CC] rounded-full flex items-center justify-center">
+                <MapPin className="w-2 h-2 md:w-3 md:h-3 text-white" />
               </div>
-              <span className="whitespace-nowrap">30 Ngày Đổi Trả</span>
+              <span className="whitespace-nowrap text-gray-800">
+                30 Ngày Đổi Trả
+              </span>
             </div>
           </div>
         </div>
