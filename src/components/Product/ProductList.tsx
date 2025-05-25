@@ -8,7 +8,7 @@ import { ProductService } from "@/services/ProductService";
 import { CategoriesService } from "@/services/CategoriesService";
 import { BrandService } from "@/services/BrandService";
 import ProductCard from "./ProductCard";
-import { ChevronDown, Grid3X3, List } from "lucide-react";
+import { ChevronDown, Filter } from "lucide-react";
 
 interface FilterState {
   categories: number[];
@@ -24,8 +24,8 @@ const ProductList: React.FC = () => {
   const [categories, setCategories] = useState<Category[]>([]);
   const [brands, setBrands] = useState<Brand[]>([]);
   const [loading, setLoading] = useState(true);
-  const [viewMode, setViewMode] = useState<"grid" | "list">("grid");
   const [sortBy, setSortBy] = useState("default");
+  const [activeTab, setActiveTab] = useState("relevant");
 
   const [filters, setFilters] = useState<FilterState>({
     categories: [],
@@ -64,6 +64,15 @@ const ProductList: React.FC = () => {
     { label: "Giá cao đến thấp", value: "price-desc" },
     { label: "Tên A-Z", value: "name-asc" },
     { label: "Tên Z-A", value: "name-desc" },
+  ];
+
+  // Filter tabs
+  const filterTabs = [
+    { label: "Liên quan", value: "relevant" },
+    { label: "Bán chạy", value: "bestseller" },
+    { label: "Mới nhất", value: "newest" },
+    { label: "Nổi bật", value: "featured" },
+    { label: "Giá: Thấp - Cao", value: "price", hasDropdown: true },
   ];
 
   useEffect(() => {
@@ -199,7 +208,7 @@ const ProductList: React.FC = () => {
 
   if (loading) {
     return (
-      <div className="w-full px-[20%] py-8">
+      <div className="w-full mx-auto px-[10%] py-8">
         <div className="animate-pulse">
           <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
             <div className="space-y-4">
@@ -222,11 +231,14 @@ const ProductList: React.FC = () => {
   }
 
   return (
-    <div className="w-full px-[20%] py-8">
+    <div className="w-full mx-auto px-[10%] py-8">
       <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
         {/* Left Sidebar - Filters */}
         <div className="space-y-0">
-          <h2 className="text-xl font-bold text-gray-800 mb-6">Bộ lọc</h2>
+          <div className="flex items-center gap-2 mb-6">
+            <Filter className="w-5 h-5 text-gray-600" />
+            <h2 className="text-xl font-bold text-gray-800">Bộ lọc</h2>
+          </div>
 
           {/* Categories Filter */}
           <FilterSection title="Danh mục sản phẩm">
@@ -312,53 +324,33 @@ const ProductList: React.FC = () => {
         {/* Right Content - Product List */}
         <div className="lg:col-span-3">
           {/* Header */}
-          <div className="flex items-center justify-between mb-6 p-4 bg-white rounded-lg shadow-sm border">
-            <div className="flex items-center space-x-4">
-              <span className="text-gray-600">
-                Hiển thị {filteredProducts.length} sản phẩm
-              </span>
+          <div className="flex justify-between items-center gap-6 mb-6">
+            {/* Left side - Title and count */}
+            <div className="flex items-center gap-4">
+              <h1 className="text-xl font-bold text-gray-900">
+                Danh sách sản phẩm
+              </h1>
             </div>
 
-            <div className="flex items-center space-x-4">
-              {/* Sort Dropdown */}
-              <div className="relative">
-                <select
-                  value={sortBy}
-                  onChange={(e) => setSortBy(e.target.value)}
-                  className="appearance-none bg-white border border-gray-300 rounded-md px-4 py-2 pr-8 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-                >
-                  {sortOptions.map((option) => (
-                    <option key={option.value} value={option.value}>
-                      {option.label}
-                    </option>
-                  ))}
-                </select>
-                <ChevronDown className="absolute right-2 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400 pointer-events-none" />
-              </div>
-
-              {/* View Mode Toggle */}
-              <div className="flex border border-gray-300 rounded-md overflow-hidden">
-                <button
-                  onClick={() => setViewMode("grid")}
-                  className={`p-2 ${
-                    viewMode === "grid"
-                      ? "bg-blue-600 text-white"
-                      : "bg-white text-gray-600 hover:bg-gray-50"
+            {/* Right side - Filter tabs */}
+            <div className="flex items-center gap-6 text-sm">
+              <div className="text-sm text-gray-600">Sắp xếp theo</div>
+              {filterTabs.map((tab) => (
+                <div
+                  key={tab.value}
+                  onClick={() => setActiveTab(tab.value)}
+                  className={`flex items-center gap-1 cursor-pointer pb-1 transition-colors ${
+                    activeTab === tab.value
+                      ? "text-blue-600 font-medium border-b-2 border-blue-600"
+                      : "text-gray-600 hover:text-blue-600"
                   }`}
                 >
-                  <Grid3X3 className="w-4 h-4" />
-                </button>
-                <button
-                  onClick={() => setViewMode("list")}
-                  className={`p-2 ${
-                    viewMode === "list"
-                      ? "bg-blue-600 text-white"
-                      : "bg-white text-gray-600 hover:bg-gray-50"
-                  }`}
-                >
-                  <List className="w-4 h-4" />
-                </button>
-              </div>
+                  <span>{tab.label}</span>
+                  {tab.hasDropdown && (
+                    <ChevronDown className="w-3 h-3 text-gray-400" />
+                  )}
+                </div>
+              ))}
             </div>
           </div>
 
@@ -370,19 +362,9 @@ const ProductList: React.FC = () => {
               </p>
             </div>
           ) : (
-            <div
-              className={
-                viewMode === "grid"
-                  ? "grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"
-                  : "space-y-4"
-              }
-            >
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               {filteredProducts.map((product) => (
-                <ProductCard
-                  key={product.id}
-                  product={product}
-                  className={viewMode === "list" ? "flex space-x-4" : ""}
-                />
+                <ProductCard key={product.id} product={product} />
               ))}
             </div>
           )}
