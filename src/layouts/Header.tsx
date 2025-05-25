@@ -14,8 +14,8 @@ export default function Header() {
   return (
     <header className="w-full">
       {/* Top Blue Banner */}
-      <div className="bg-[#0066CC] text-white text-sm py-2 px-4">
-        <div className="container mx-auto flex justify-between items-center">
+      <div className="bg-[#0066CC] text-white text-sm py-2">
+        <div className="mx-auto flex justify-between items-center px-[15%]">
           <div className="flex items-center gap-4">
             <span className="flex items-center gap-1">
               <Phone className="w-4 h-4" />
@@ -36,11 +36,11 @@ export default function Header() {
       </div>
 
       {/* Main Header */}
-      <div className="bg-white shadow-sm py-4 px-4">
-        <div className="container mx-auto flex items-center justify-between gap-4">
+      <div className="bg-white shadow-sm py-4">
+        <div className="mx-auto flex items-center justify-between gap-4 px-[15%]">
           {/* Logo */}
-          <div className="flex items-center">
-            <div className="text-2xl font-bold">
+          <div className="flex items-center flex-shrink-0">
+            <div className="text-xl font-bold">
               <span className="text-[#0066CC]">SUN</span>
               <span className="text-[#FF6B35]">EIL</span>
             </div>
@@ -50,7 +50,7 @@ export default function Header() {
           </div>
 
           {/* Search Bar */}
-          <div className="flex-1 max-w-md mx-8">
+          <div className="flex-1 max-w-sm mx-4">
             <div className="relative flex">
               <Input
                 type="text"
@@ -67,7 +67,7 @@ export default function Header() {
           </div>
 
           {/* Right Icons */}
-          <div className="flex items-center gap-4">
+          <div className="flex items-center gap-3 flex-shrink-0">
             {/* Notification */}
             <div className="relative">
               <Bell className="w-6 h-6 text-gray-600" />
@@ -97,63 +97,75 @@ export default function Header() {
       </div>
 
       {/* Navigation Bar */}
-      <div className="bg-[#0066CC] text-white py-3 px-4">
-        <div className="container mx-auto flex items-center justify-between">
-          <div className="flex items-center gap-8">
+      <div className="bg-[#0066CC] text-white py-3">
+        <div className="mx-auto flex items-center justify-between px-[15%]">
+          <div className="flex items-center gap-6">
             {/* Menu Button */}
             <Button
               variant="secondary"
-              className="bg-[#004499] hover:bg-[#003366] text-white flex items-center gap-2"
+              className="bg-[#004499] hover:bg-[#003366] text-white flex items-center gap-2 flex-shrink-0"
             >
               <Menu className="w-4 h-4" />
               Danh Mục Sản Phẩm
             </Button>
 
             {/* Navigation Links */}
-            <nav className="flex items-center gap-6">
-              <a href="#" className="hover:text-blue-200 transition-colors">
+            <nav className="flex items-center gap-4">
+              <a
+                href="#"
+                className="hover:text-blue-200 transition-colors whitespace-nowrap"
+              >
                 Về Chúng Tôi
               </a>
-              <a href="#" className="hover:text-blue-200 transition-colors">
+              <a
+                href="#"
+                className="hover:text-blue-200 transition-colors whitespace-nowrap"
+              >
                 Bài Viết
               </a>
-              <a href="#" className="hover:text-blue-200 transition-colors">
+              <a
+                href="#"
+                className="hover:text-blue-200 transition-colors whitespace-nowrap"
+              >
                 Catalogue
               </a>
-              <a href="#" className="hover:text-blue-200 transition-colors">
+              <a
+                href="#"
+                className="hover:text-blue-200 transition-colors whitespace-nowrap"
+              >
                 Liên Hệ
               </a>
             </nav>
           </div>
 
           {/* Right Side Services */}
-          <div className="flex items-center gap-6 text-sm">
-            <div className="flex items-center gap-2">
-              <div className="w-6 h-6 bg-white rounded-full flex items-center justify-center">
-                <Phone className="w-4 h-4 text-[#0066CC]" />
+          <div className="flex items-center gap-4 text-sm flex-shrink-0">
+            <div className="flex items-center gap-1">
+              <div className="w-5 h-5 bg-white rounded-full flex items-center justify-center">
+                <Phone className="w-3 h-3 text-[#0066CC]" />
               </div>
-              <span>Hỗ trợ 24/7</span>
+              <span className="whitespace-nowrap">Hỗ trợ 24/7</span>
             </div>
 
-            <div className="flex items-center gap-2">
-              <div className="w-6 h-6 bg-white rounded-full flex items-center justify-center">
-                <ShoppingCart className="w-4 h-4 text-[#0066CC]" />
+            <div className="flex items-center gap-1">
+              <div className="w-5 h-5 bg-white rounded-full flex items-center justify-center">
+                <ShoppingCart className="w-3 h-3 text-[#0066CC]" />
               </div>
-              <span>Miễn Phí Vận Chuyển</span>
+              <span className="whitespace-nowrap">Miễn Phí Vận Chuyển</span>
             </div>
 
-            <div className="flex items-center gap-2">
-              <div className="w-6 h-6 bg-white rounded-full flex items-center justify-center">
-                <Bell className="w-4 h-4 text-[#0066CC]" />
+            <div className="flex items-center gap-1">
+              <div className="w-5 h-5 bg-white rounded-full flex items-center justify-center">
+                <Bell className="w-3 h-3 text-[#0066CC]" />
               </div>
-              <span>Giao Hàng Nhanh 2h</span>
+              <span className="whitespace-nowrap">Giao Hàng Nhanh 2h</span>
             </div>
 
-            <div className="flex items-center gap-2">
-              <div className="w-6 h-6 bg-white rounded-full flex items-center justify-center">
-                <MapPin className="w-4 h-4 text-[#0066CC]" />
+            <div className="flex items-center gap-1">
+              <div className="w-5 h-5 bg-white rounded-full flex items-center justify-center">
+                <MapPin className="w-3 h-3 text-[#0066CC]" />
               </div>
-              <span>30 Ngày Đổi Trả</span>
+              <span className="whitespace-nowrap">30 Ngày Đổi Trả</span>
             </div>
           </div>
         </div>
