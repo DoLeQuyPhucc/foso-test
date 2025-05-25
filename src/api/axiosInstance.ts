@@ -16,3 +16,11 @@ const createApiInstance = (baseURL?: string, customHeaders = {}) => {
 export const productsService = createApiInstance(
   process.env.NEXT_PUBLIC_BASE_URL
 );
+
+export const categoryService = createApiInstance(
+  process.env.NEXT_PUBLIC_BASE_URL_2
+);
+
+export const bannerService = createApiInstance(
+  process.env.NEXT_PUBLIC_BASE_URL_2
+);
