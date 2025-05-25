@@ -2,6 +2,7 @@ import React from "react";
 import Image from "next/image";
 import { Product } from "@/types/Product";
 import { Star, ShoppingCart } from "lucide-react";
+import { useCart } from "@/contexts/CartContext";
 
 interface ProductCardProps {
   product: Product;
@@ -14,6 +15,8 @@ const ProductCard: React.FC<ProductCardProps> = ({
   className = "",
   onBuyNow,
 }) => {
+  const { addToCart } = useCart();
+
   const formatPrice = (price: number) => {
     return new Intl.NumberFormat("vi-VN", {
       style: "currency",
@@ -22,17 +25,21 @@ const ProductCard: React.FC<ProductCardProps> = ({
   };
 
   const handleBuyNow = () => {
+    // Add to cart first
+    addToCart(product, 1);
+
+    // Then call custom handler if provided
     if (onBuyNow) {
       onBuyNow(product);
     } else {
-      // Default behavior - có thể redirect đến trang chi tiết sản phẩm
-      console.log("Mua ngay sản phẩm:", product.name);
+      // Default behavior - show success message or redirect
+      console.log("Đã thêm vào giỏ hàng:", product.name);
     }
   };
 
   return (
     <div
-      className={`bg-white rounded-lg shadow-lg p-4 hover:shadow-xl transition-shadow duration-300 ${className}`}
+      className={`bg-white rounded-lg shadow-lg p-4 hover:shadow-xl transition-shadow duration-300 flex flex-col h-full ${className}`}
     >
       {/* Product Image */}
       <div className="relative mb-3 h-[180px] rounded-lg overflow-hidden group">
@@ -52,22 +59,22 @@ const ProductCard: React.FC<ProductCardProps> = ({
         </div>
       </div>
 
-      {/* Product Info */}
-      <div className="space-y-3">
+      {/* Product Info - Flex grow to push button to bottom */}
+      <div className="flex flex-col flex-grow space-y-3">
         {/* Product Name */}
         <h3 className="font-semibold text-gray-800 text-sm line-clamp-2 leading-tight">
           {product.name}
         </h3>
 
-        {/* Price Section */}
-        <div className="space-y-1">
+        {/* Price Section - Fixed height to ensure consistency */}
+        <div className="space-y-1 min-h-[60px] flex flex-col justify-start">
           {/* Current Price */}
           <div className="text-red-600 font-bold text-lg">
             {formatPrice(product.price)}
           </div>
 
           {/* Original Price and Discount */}
-          {product.originalPrice > product.price && (
+          {product.originalPrice > product.price ? (
             <div className="flex items-center gap-2">
               <span className="text-gray-500 line-through text-sm">
                 {formatPrice(product.originalPrice)}
@@ -76,13 +83,18 @@ const ProductCard: React.FC<ProductCardProps> = ({
                 -{product.discount}%
               </span>
             </div>
+          ) : (
+            <div className="h-6"></div> // Placeholder để giữ chiều cao đồng đều
           )}
         </div>
+
+        {/* Spacer to push button to bottom */}
+        <div className="flex-grow"></div>
 
         {/* Buy Now Button */}
         <button
           onClick={handleBuyNow}
-          className="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2.5 px-4 rounded-lg flex items-center justify-center gap-2 transition-colors duration-200 active:scale-95 transform"
+          className="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2.5 px-4 rounded-lg flex items-center justify-center gap-2 transition-colors duration-200 active:scale-95 transform mt-auto"
         >
           <ShoppingCart className="w-4 h-4" />
           Mua ngay
