@@ -7,6 +7,8 @@ import Banner from "@/components/Banner/Banner";
 import { ProductService } from "@/services/ProductService";
 import { Product } from "@/types/Product";
 import ProductList from "@/components/Product/ProductList";
+import Policy from "@/components/Policy/Policy";
+import Location from "@/components/Location/Location";
 
 export default function Home() {
   const [featuredProducts, setFeaturedProducts] = useState<Product[]>([]);
@@ -37,6 +39,8 @@ export default function Home() {
           loading={loading}
         />
         <ProductList />
+        <Policy />
+        <Location />
       </main>
       <Footer />
     </div>
