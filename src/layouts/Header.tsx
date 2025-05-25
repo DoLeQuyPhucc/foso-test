@@ -6,6 +6,7 @@ import {
   ShoppingCart,
   User,
   Menu,
+  TicketPercent,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -19,9 +20,11 @@ export default function Header() {
         <div className="mx-auto flex justify-between items-center px-[10%]">
           <div className="flex items-center gap-4">
             <span className="flex items-center gap-1">
-              <Phone className="w-4 h-4" />
+              <TicketPercent className="w-4 h-4" />
               <span className="hidden lg:inline">
-                Tổng đài tư vấn: gọi ngay để chúng tôi tư vấn miễn phí
+                Nhập mã{" "}
+                <span className="font-bold text-yellow-500">NEWBIE</span> giảm
+                ngay 10% cho lần đầu mua hàng.
               </span>
               <span className="lg:hidden">Tư vấn miễn phí</span>
             </span>
