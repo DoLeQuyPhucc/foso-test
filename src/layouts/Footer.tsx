@@ -5,14 +5,14 @@ export default function Footer() {
   return (
     <footer className="w-full bg-gray-100 text-gray-800 border-t">
       {/* Main Footer Content */}
-      <div className="mx-auto py-6 px-[5%] md:px-[10%]">
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 md:gap-8">
+      <div className="mx-auto py-6 px-4 sm:px-6 md:px-[8%] lg:px-[10%]">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 md:gap-6">
           {/* Company Info */}
-          <div className="space-y-4 lg:col-span-1">
-            <h3 className="text-base md:text-lg font-bold text-blue-600 mb-4">
+          <div className="space-y-3 sm:space-y-4">
+            <h3 className="text-sm sm:text-base md:text-lg font-bold text-blue-600 mb-2 sm:mb-4">
               VIET HUNG AUTO PRODUCTION TRADING JOINT STOCK COMPANY
             </h3>
-            <div className="space-y-2 text-xs md:text-sm text-gray-600">
+            <div className="space-y-1.5 sm:space-y-2 text-xs md:text-sm text-gray-600">
               <p>
                 <strong>Tax code:</strong> 0305094228
               </p>
@@ -29,21 +29,21 @@ export default function Footer() {
             </div>
 
             {/* Certification Logo */}
-            <div className="mt-6">
+            <div className="mt-4 sm:mt-6">
               <Image
                 src="/bo-cong-thuong.png"
                 alt="Bộ Công Thương"
                 width={100}
                 height={50}
-                className="object-contain md:w-[120px] md:h-[60px]"
+                className="object-contain w-[80px] h-[40px] sm:w-[100px] sm:h-[50px] md:w-[120px] md:h-[60px]"
               />
             </div>
           </div>
 
           {/* Sitemap */}
-          <div className="space-y-4">
-            <h3 className="text-base md:text-lg font-semibold text-gray-800">Sitemap</h3>
-            <ul className="space-y-2">
+          <div className="space-y-3 sm:space-y-4 mt-6 sm:mt-0">
+            <h3 className="text-sm sm:text-base md:text-lg font-semibold text-gray-800">Sitemap</h3>
+            <ul className="space-y-1.5 sm:space-y-2">
               <li>
                 <a
                   href="#"
@@ -80,9 +80,9 @@ export default function Footer() {
           </div>
 
           {/* Legal */}
-          <div className="space-y-4">
-            <h3 className="text-base md:text-lg font-semibold text-gray-800">Legal</h3>
-            <ul className="space-y-2">
+          <div className="space-y-3 sm:space-y-4 mt-6 sm:mt-0">
+            <h3 className="text-sm sm:text-base md:text-lg font-semibold text-gray-800">Legal</h3>
+            <ul className="space-y-1.5 sm:space-y-2">
               <li>
                 <a
                   href="#"
@@ -119,18 +119,18 @@ export default function Footer() {
           </div>
 
           {/* Download App */}
-          <div className="space-y-4">
-            <h3 className="text-base md:text-lg font-semibold text-gray-800">
+          <div className="space-y-3 sm:space-y-4 mt-6 lg:mt-0">
+            <h3 className="text-sm sm:text-base md:text-lg font-semibold text-gray-800">
               Download App
             </h3>
-            <div className="space-y-3">
+            <div className="space-y-2 sm:space-y-3">
               {/* Google Play Store */}
               <div>
                 <a href="#" className="block">
-                  <div className="bg-black text-white rounded-lg px-3 md:px-4 py-2 flex items-center gap-2 md:gap-3 hover:bg-gray-800 transition-colors w-full max-w-[180px]">
+                  <div className="bg-black text-white rounded-lg px-2 sm:px-3 md:px-4 py-1.5 sm:py-2 flex items-center gap-1.5 sm:gap-2 md:gap-3 hover:bg-gray-800 transition-colors w-full max-w-[150px] sm:max-w-[180px]">
                     <div className="text-white flex-shrink-0">
                       <svg
-                        className="w-5 h-5 md:w-6 md:h-6"
+                        className="w-4 h-4 sm:w-5 sm:h-5 md:w-6 md:h-6"
                         viewBox="0 0 24 24"
                         fill="currentColor"
                       >
@@ -138,7 +138,7 @@ export default function Footer() {
                       </svg>
                     </div>
                     <div className="text-left flex-1">
-                      <div className="text-xs">GET IT ON</div>
+                      <div className="text-[10px] sm:text-xs">GET IT ON</div>
                       <div className="text-xs md:text-sm font-semibold">Google Play</div>
                     </div>
                   </div>
@@ -148,10 +148,10 @@ export default function Footer() {
               {/* Apple App Store */}
               <div>
                 <a href="#" className="block">
-                  <div className="bg-black text-white rounded-lg px-3 md:px-4 py-2 flex items-center gap-2 md:gap-3 hover:bg-gray-800 transition-colors w-full max-w-[180px]">
+                  <div className="bg-black text-white rounded-lg px-2 sm:px-3 md:px-4 py-1.5 sm:py-2 flex items-center gap-1.5 sm:gap-2 md:gap-3 hover:bg-gray-800 transition-colors w-full max-w-[150px] sm:max-w-[180px]">
                     <div className="text-white flex-shrink-0">
                       <svg
-                        className="w-5 h-5 md:w-6 md:h-6"
+                        className="w-4 h-4 sm:w-5 sm:h-5 md:w-6 md:h-6"
                         viewBox="0 0 24 24"
                         fill="currentColor"
                       >
@@ -159,7 +159,7 @@ export default function Footer() {
                       </svg>
                     </div>
                     <div className="text-left flex-1">
-                      <div className="text-xs">Download on the</div>
+                      <div className="text-[10px] sm:text-xs">Download on the</div>
                       <div className="text-xs md:text-sm font-semibold">App Store</div>
                     </div>
                   </div>
@@ -168,14 +168,14 @@ export default function Footer() {
             </div>
 
             {/* Language Selector */}
-            <div className="mt-6">
-              <div className="flex items-center gap-2">
-                <div className="w-5 h-5 md:w-6 md:h-6 bg-red-600 rounded-full flex items-center justify-center text-white text-xs font-bold">
+            <div className="mt-4 sm:mt-6">
+              <div className="flex items-center gap-1.5 sm:gap-2">
+                <div className="w-4 h-4 sm:w-5 sm:h-5 md:w-6 md:h-6 bg-red-600 rounded-full flex items-center justify-center text-white text-[10px] sm:text-xs font-bold">
                   VI
                 </div>
                 <span className="text-xs md:text-sm text-gray-600">VI</span>
                 <svg
-                  className="w-3 h-3 md:w-4 md:h-4 text-gray-400"
+                  className="w-2.5 h-2.5 sm:w-3 sm:h-3 md:w-4 md:h-4 text-gray-400"
                   fill="none"
                   stroke="currentColor"
                   viewBox="0 0 24 24"
@@ -190,6 +190,15 @@ export default function Footer() {
               </div>
             </div>
           </div>
+        </div>
+      </div>
+      
+      {/* Copyright Section - Mobile Friendly */}
+      <div className="bg-gray-200 py-3 sm:py-4">
+        <div className="mx-auto px-4 sm:px-6 md:px-[8%] lg:px-[10%] text-center">
+          <p className="text-[10px] sm:text-xs text-gray-600">
+            © {new Date().getFullYear()} Viet Hung Auto. All rights reserved.
+          </p>
         </div>
       </div>
     </footer>

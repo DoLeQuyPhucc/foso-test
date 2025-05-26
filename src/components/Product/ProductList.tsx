@@ -8,7 +8,13 @@ import { ProductService } from "@/services/ProductService";
 import { CategoriesService } from "@/services/CategoriesService";
 import { BrandService } from "@/services/BrandService";
 import ProductCard from "./ProductCard";
-import { ChevronDown, Filter, Loader2 } from "lucide-react";
+import {
+  ChevronDown,
+  Filter,
+  Loader2,
+  X,
+  SlidersHorizontal,
+} from "lucide-react";
 
 interface FilterState {
   categories: number[];
@@ -28,6 +34,7 @@ const ProductList: React.FC = () => {
   const [loadingMore, setLoadingMore] = useState(false);
   const [sortBy, setSortBy] = useState("default");
   const [activeTab, setActiveTab] = useState("relevant");
+  const [isMobileFilterOpen, setIsMobileFilterOpen] = useState(false);
 
   // Lazy loading states
   const [currentPage, setCurrentPage] = useState(1);
@@ -125,6 +132,37 @@ const ProductList: React.FC = () => {
       }
     };
   }, [hasMore, loadingMore, filteredProducts]);
+
+  // Close mobile filter when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      const target = event.target as HTMLElement;
+      if (
+        isMobileFilterOpen &&
+        !target.closest("[data-filter-sidebar]") &&
+        !target.closest("[data-filter-button]")
+      ) {
+        setIsMobileFilterOpen(false);
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [isMobileFilterOpen]);
+
+  // Prevent body scroll when mobile filter is open
+  useEffect(() => {
+    if (isMobileFilterOpen) {
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "auto";
+    }
+    return () => {
+      document.body.style.overflow = "auto";
+    };
+  }, [isMobileFilterOpen]);
 
   const fetchData = async () => {
     try {
@@ -254,8 +292,10 @@ const ProductList: React.FC = () => {
     title: string;
     children: React.ReactNode;
   }) => (
-    <div className="border-b border-gray-200 pb-4 mb-4">
-      <h3 className="font-semibold text-gray-800 mb-3">{title}</h3>
+    <div className="border-b border-gray-200 pb-3 sm:pb-4 mb-3 sm:mb-4">
+      <h3 className="font-semibold text-gray-800 mb-2 sm:mb-3 text-sm sm:text-base">
+        {title}
+      </h3>
       {children}
     </div>
   );
@@ -276,24 +316,32 @@ const ProductList: React.FC = () => {
         onChange={(e) => onChange(e.target.checked)}
         className="rounded border-gray-300 text-blue-600 focus:ring-blue-500"
       />
-      <span className="text-sm text-gray-700">{label}</span>
+      <span className="text-xs sm:text-sm text-gray-700">{label}</span>
     </label>
   );
 
+  // Count active filters
+  const activeFiltersCount =
+    filters.categories.length +
+    filters.brands.length +
+    (filters.priceRange ? 1 : 0) +
+    filters.years.length +
+    filters.origins.length;
+
   if (loading) {
     return (
-      <div className="w-full mx-auto px-[10%] py-8">
+      <div className="w-full mx-auto px-4 sm:px-6 md:px-[8%] lg:px-[10%] py-4 sm:py-8">
         <div className="animate-pulse">
-          <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
-            <div className="space-y-4">
+          <div className="grid grid-cols-1 lg:grid-cols-4 gap-4 sm:gap-8">
+            <div className="space-y-4 hidden lg:block">
               {Array.from({ length: 5 }).map((_, i) => (
                 <div key={i} className="h-32 bg-gray-200 rounded"></div>
               ))}
             </div>
             <div className="lg:col-span-3 space-y-4">
               <div className="h-16 bg-gray-200 rounded"></div>
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                {Array.from({ length: 9 }).map((_, i) => (
+              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3 sm:gap-4">
+                {Array.from({ length: 6 }).map((_, i) => (
                   <div key={i} className="h-64 bg-gray-200 rounded"></div>
                 ))}
               </div>
@@ -305,10 +353,27 @@ const ProductList: React.FC = () => {
   }
 
   return (
-    <div className="w-full mx-auto px-[10%] py-8">
-      <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
-        {/* Left Sidebar - Filters */}
-        <div className="space-y-0">
+    <div className="w-full mx-auto px-4 sm:px-6 md:px-[8%] lg:px-[10%] py-4 sm:py-8">
+      <div className="grid grid-cols-1 lg:grid-cols-4 gap-4 sm:gap-8">
+        {/* Mobile Filter Button */}
+        <div className="lg:hidden flex justify-between items-center mb-4">
+          <h1 className="text-lg sm:text-xl font-bold text-gray-900">
+            Danh sách sản phẩm
+          </h1>
+          <button
+            className="flex items-center gap-2 px-3 py-2 bg-blue-50 text-blue-600 rounded-lg hover:bg-blue-100 transition-colors"
+            onClick={() => setIsMobileFilterOpen(true)}
+            data-filter-button
+          >
+            <SlidersHorizontal className="w-4 h-4" />
+            <span className="text-sm font-medium">
+              Bộ lọc {activeFiltersCount > 0 && `(${activeFiltersCount})`}
+            </span>
+          </button>
+        </div>
+
+        {/* Left Sidebar - Filters (Desktop) */}
+        <div className="space-y-0 hidden lg:block">
           <div className="flex items-center gap-2 mb-6">
             <Filter className="w-5 h-5 text-gray-600" />
             <h2 className="text-xl font-bold text-gray-800">Bộ lọc</h2>
@@ -395,10 +460,125 @@ const ProductList: React.FC = () => {
           </FilterSection>
         </div>
 
+        {/* Mobile Filter Sidebar */}
+        {isMobileFilterOpen && (
+          <div className="fixed inset-0 z-50 bg-black bg-opacity-50 lg:hidden">
+            <div
+              className="absolute top-0 bottom-0 left-0 w-[85%] max-w-xs bg-white shadow-xl overflow-y-auto"
+              data-filter-sidebar
+            >
+              <div className="sticky top-0 bg-white z-10 border-b border-gray-200 px-4 py-3 flex justify-between items-center">
+                <h2 className="font-bold text-gray-800 flex items-center gap-2">
+                  <Filter className="w-4 h-4" />
+                  Bộ lọc
+                </h2>
+                <button
+                  onClick={() => setIsMobileFilterOpen(false)}
+                  className="p-1 rounded-full hover:bg-gray-100"
+                >
+                  <X className="w-5 h-5 text-gray-500" />
+                </button>
+              </div>
+
+              <div className="p-4 space-y-4">
+                {/* Categories Filter */}
+                <FilterSection title="Danh mục sản phẩm">
+                  <div className="space-y-2">
+                    {categories.map((category) => (
+                      <CheckboxItem
+                        key={category.id}
+                        label={category.name}
+                        checked={filters.categories.includes(category.id)}
+                        onChange={(checked) =>
+                          handleFilterChange("categories", category.id, checked)
+                        }
+                      />
+                    ))}
+                  </div>
+                </FilterSection>
+
+                {/* Price Range Filter */}
+                <FilterSection title="Khoảng giá">
+                  <div className="space-y-2">
+                    {priceRanges.map((range) => (
+                      <CheckboxItem
+                        key={range.value}
+                        label={range.label}
+                        checked={filters.priceRange === range.value}
+                        onChange={(checked) =>
+                          handleFilterChange("priceRange", range.value, checked)
+                        }
+                      />
+                    ))}
+                  </div>
+                </FilterSection>
+
+                {/* Brands Filter */}
+                <FilterSection title="Thương hiệu">
+                  <div className="space-y-2">
+                    {brands.map((brand) => (
+                      <CheckboxItem
+                        key={brand.id}
+                        label={brand.name}
+                        checked={filters.brands.includes(brand.id)}
+                        onChange={(checked) =>
+                          handleFilterChange("brands", brand.id, checked)
+                        }
+                      />
+                    ))}
+                  </div>
+                </FilterSection>
+
+                {/* Years Filter */}
+                <FilterSection title="Năm sản xuất">
+                  <div className="space-y-2">
+                    {years.map((year) => (
+                      <CheckboxItem
+                        key={year}
+                        label={year.toString()}
+                        checked={filters.years.includes(year)}
+                        onChange={(checked) =>
+                          handleFilterChange("years", year, checked)
+                        }
+                      />
+                    ))}
+                  </div>
+                </FilterSection>
+
+                {/* Origins Filter */}
+                <FilterSection title="Xuất xứ">
+                  <div className="space-y-2">
+                    {origins.map((origin) => (
+                      <CheckboxItem
+                        key={origin}
+                        label={origin}
+                        checked={filters.origins.includes(origin)}
+                        onChange={(checked) =>
+                          handleFilterChange("origins", origin, checked)
+                        }
+                      />
+                    ))}
+                  </div>
+                </FilterSection>
+              </div>
+
+              {/* Apply Filters Button */}
+              <div className="sticky bottom-0 bg-white border-t border-gray-200 p-4">
+                <button
+                  className="w-full py-2 bg-blue-600 text-white rounded-lg font-medium hover:bg-blue-700 transition-colors"
+                  onClick={() => setIsMobileFilterOpen(false)}
+                >
+                  Áp dụng ({activeFiltersCount})
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
+
         {/* Right Content - Product List */}
         <div className="lg:col-span-3">
-          {/* Header */}
-          <div className="flex justify-between items-center gap-6 mb-6">
+          {/* Header - Desktop */}
+          <div className="hidden lg:flex justify-between items-center gap-6 mb-6">
             {/* Left side - Title and count */}
             <div className="flex items-center gap-4">
               <h1 className="text-xl font-bold text-gray-900">
@@ -431,16 +611,41 @@ const ProductList: React.FC = () => {
             </div>
           </div>
 
+          {/* Mobile Sort Dropdown */}
+          <div className="lg:hidden mb-4">
+            <div className="flex items-center justify-between">
+              <span className="text-xs sm:text-sm text-gray-500">
+                {filteredProducts.length} sản phẩm
+              </span>
+              <div className="relative">
+                <select
+                  className="appearance-none bg-gray-50 border border-gray-200 text-gray-700 py-1 px-3 pr-8 rounded text-xs sm:text-sm focus:outline-none focus:ring-1 focus:ring-blue-500"
+                  value={activeTab}
+                  onChange={(e) => setActiveTab(e.target.value)}
+                >
+                  {filterTabs.map((tab) => (
+                    <option key={tab.value} value={tab.value}>
+                      {tab.label}
+                    </option>
+                  ))}
+                </select>
+                <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
+                  <ChevronDown className="w-3 h-3" />
+                </div>
+              </div>
+            </div>
+          </div>
+
           {/* Products Grid */}
           {filteredProducts.length === 0 ? (
-            <div className="text-center py-12">
-              <p className="text-gray-500 text-lg">
+            <div className="text-center py-8 sm:py-12">
+              <p className="text-gray-500 text-sm sm:text-lg">
                 Không tìm thấy sản phẩm nào
               </p>
             </div>
           ) : (
             <>
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-6">
                 {displayedProducts.map((product) => (
                   <ProductCard key={product.id} product={product} />
                 ))}
@@ -450,15 +655,17 @@ const ProductList: React.FC = () => {
               {hasMore && (
                 <div
                   ref={loadMoreRef}
-                  className="flex justify-center items-center py-8"
+                  className="flex justify-center items-center py-6 sm:py-8"
                 >
                   {loadingMore ? (
                     <div className="flex items-center gap-2 text-gray-600">
-                      <Loader2 className="w-5 h-5 animate-spin" />
-                      <span>Đang tải thêm sản phẩm...</span>
+                      <Loader2 className="w-4 h-4 sm:w-5 sm:h-5 animate-spin" />
+                      <span className="text-xs sm:text-sm">
+                        Đang tải thêm sản phẩm...
+                      </span>
                     </div>
                   ) : (
-                    <div className="text-gray-400 text-sm">
+                    <div className="text-gray-400 text-xs sm:text-sm">
                       Cuộn xuống để xem thêm sản phẩm
                     </div>
                   )}
