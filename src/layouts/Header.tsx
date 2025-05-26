@@ -15,29 +15,34 @@ import { Input } from "@/components/ui/input";
 import Image from "next/image";
 import { useCart } from "@/contexts/CartContext";
 import CartDropdown from "@/components/Cart/CartDropdown";
+import CategoryDropdown from "@/components/CategoryDropdown/CategoryDropdown";
 import React, { useState, useEffect } from "react";
 
 export default function Header() {
   const { getTotalItems } = useCart();
   const [isCartOpen, setIsCartOpen] = useState(false);
+  const [isCategoryDropdownOpen, setIsCategoryDropdownOpen] = useState(false);
 
-  // Close cart when clicking outside
+  // Close cart and category dropdown when clicking outside
   const handleClickOutside = (event: MouseEvent) => {
     const target = event.target as HTMLElement;
     if (!target.closest("[data-cart-container]")) {
       setIsCartOpen(false);
     }
+    if (!target.closest("[data-category-container]")) {
+      setIsCategoryDropdownOpen(false);
+    }
   };
 
   // Add event listener for clicking outside
   useEffect(() => {
-    if (isCartOpen) {
+    if (isCartOpen || isCategoryDropdownOpen) {
       document.addEventListener("mousedown", handleClickOutside);
       return () => {
         document.removeEventListener("mousedown", handleClickOutside);
       };
     }
-  }, [isCartOpen]);
+  }, [isCartOpen, isCategoryDropdownOpen]);
 
   // Handle hover to open cart
   const handleCartHover = () => {
@@ -141,13 +146,18 @@ export default function Header() {
       </div>
 
       {/* Navigation Bar */}
-      <div className="bg-white border-b border-gray-200 py-3">
+      <div
+        className="bg-white border-b border-gray-200 py-3 relative"
+        data-category-container
+      >
         <div className="mx-auto flex items-center justify-between px-[5%] md:px-[10%]">
           <div className="flex items-center gap-3 md:gap-6">
             {/* Menu Button */}
             <Button
               variant="secondary"
               className="bg-[#0066CC] hover:bg-[#004499] text-white flex items-center gap-1 md:gap-2 flex-shrink-0 text-xs md:text-sm px-2 md:px-4"
+              onClick={() => setIsCategoryDropdownOpen(!isCategoryDropdownOpen)}
+              onMouseEnter={() => setIsCategoryDropdownOpen(true)}
             >
               <Menu className="w-3 h-3 md:w-4 md:h-4" />
               <span className="hidden sm:inline">Danh Mục Sản Phẩm</span>
@@ -222,6 +232,12 @@ export default function Header() {
             </div>
           </div>
         </div>
+
+        {/* Category Dropdown */}
+        <CategoryDropdown
+          isOpen={isCategoryDropdownOpen}
+          onClose={() => setIsCategoryDropdownOpen(false)}
+        />
       </div>
     </header>
   );
